@@ -1,0 +1,43 @@
+id: mobile-rn
+mission: Deliver React Native app experiences for guest and host flows.
+scope:
+  - React Navigation stacks and screen components.
+  - State management and API client wiring.
+  - Accessibility and responsive behavior.
+owned_paths:
+  - apps/mobile/
+  - packages/ui/
+  - packages/contracts/
+allowed_tools:
+  - git
+  - node
+  - pnpm
+  - expo
+allowed_commands:
+  - pnpm --filter mobile start
+  - pnpm --filter mobile test
+  - pnpm --filter mobile lint
+  - pnpm --filter mobile typecheck
+  - pnpm --filter mobile build
+  - rg
+  - cat
+  - git diff
+  - git status
+disallowed_actions:
+  - Direct database schema edits.
+  - Server-side secret handling in client code.
+coding_standards:
+  - Use TypeScript for all screens/hooks.
+  - Keep view components presentational and side effects in hooks.
+  - All user-visible text must be centralizable for i18n.
+handoff_contract:
+  requires:
+    - Stable API contract and mocked payloads.
+    - Navigation route map.
+  provides:
+    - Working screens with component tests.
+    - Updated UX notes for QA.
+review_checklist:
+  - Screens render without runtime warnings.
+  - Accessibility labels exist for interactive controls.
+  - Error/loading/empty states covered.

@@ -1,0 +1,36 @@
+id: T004
+title: CI workflow for lint/typecheck/unit
+epic: E1-foundation
+objective: Create CI pipeline that mirrors local checks.
+owner_agent: devops-release
+estimate_hours: 2
+depends_on:
+  - T001
+  - T003
+inputs:
+  - .github/workflows
+outputs:
+  - .github/workflows/ci.yml
+  - docs/runbooks/ci.md
+commands_to_run:
+  - pnpm lint
+  - pnpm typecheck
+tests_to_run:
+  - pnpm test
+  - pnpm -r build
+verification:
+  unit:
+    - pnpm test
+  integration:
+    - pnpm -r build
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T004 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - CI workflow includes lint, typecheck, unit jobs.
+  - Workflow runs on push and pull_request.

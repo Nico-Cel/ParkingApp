@@ -1,0 +1,38 @@
+id: T024
+title: Integration suite for booking + payments
+epic: E7-quality-release
+objective: Implement end-to-end API integration tests around booking lifecycle and payment settlement.
+owner_agent: qa-verification
+estimate_hours: 2
+depends_on:
+  - T016
+  - T018
+  - T023
+inputs:
+  - tests/integration
+outputs:
+  - tests/integration/booking-payment.integration.test.ts
+  - tests/integration/helpers/test-env.ts
+  - docs/qa/integration-report-template.md
+commands_to_run:
+  - docker compose up -d db api
+  - pnpm test:integration --filter booking
+tests_to_run:
+  - pnpm test:integration --filter booking
+  - pnpm test:integration --filter payments
+verification:
+  unit:
+    - pnpm test:integration --filter booking
+  integration:
+    - pnpm test:integration --filter payments
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T024 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Gate 3 integration flows pass in CI mode.
+  - Failure artifacts include logs and request traces.

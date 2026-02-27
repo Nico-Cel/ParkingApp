@@ -1,0 +1,42 @@
+id: T025
+title: E2E smoke flow for guest journey
+epic: E7-quality-release
+objective: Automate smoke path login → search → book → pay → message → review.
+owner_agent: qa-verification
+estimate_hours: 2
+depends_on:
+  - T007
+  - T012
+  - T019
+  - T021
+  - T022
+  - T024
+inputs:
+  - tests/e2e
+outputs:
+  - tests/e2e/smoke.spec.ts
+  - tests/e2e/page-objects/LoginPage.ts
+  - tests/e2e/page-objects/SearchPage.ts
+  - docs/qa/e2e-smoke.md
+commands_to_run:
+  - docker compose up -d
+  - pnpm test:e2e -- --grep smoke
+tests_to_run:
+  - pnpm test:e2e -- --grep smoke
+  - pnpm test:e2e -- --grep login
+verification:
+  unit:
+    - pnpm test:e2e -- --grep smoke
+  integration:
+    - pnpm test:e2e -- --grep login
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T025 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Gate 4 smoke script passes end-to-end journey.
+  - Video/screenshot artifacts generated for failures.

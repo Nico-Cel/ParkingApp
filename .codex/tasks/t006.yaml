@@ -1,0 +1,37 @@
+id: T006
+title: Auth API with JWT + refresh
+epic: E2-auth-profiles
+objective: Implement register/login/refresh/logout endpoints with secure token rotation.
+owner_agent: backend-api
+estimate_hours: 2
+depends_on:
+  - T005
+  - T003
+inputs:
+  - services/api/src/modules/auth
+outputs:
+  - services/api/src/modules/auth/routes.ts
+  - services/api/src/modules/auth/service.ts
+  - services/api/src/modules/auth/auth.spec.ts
+commands_to_run:
+  - pnpm --filter api build
+  - pnpm --filter api lint
+tests_to_run:
+  - pnpm --filter api test -- auth
+  - pnpm --filter api test -- token
+verification:
+  unit:
+    - pnpm --filter api test -- auth
+  integration:
+    - pnpm --filter api test -- token
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T006 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Access and refresh token flows pass tests.
+  - Revoked refresh tokens cannot be reused.

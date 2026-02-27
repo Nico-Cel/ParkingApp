@@ -1,0 +1,38 @@
+id: T018
+title: Payment intent + webhook settlement
+epic: E5-booking-payments
+objective: Create booking payment intent flow and webhook-driven settlement updates.
+owner_agent: payments-compliance
+estimate_hours: 2
+depends_on:
+  - T016
+  - T017
+inputs:
+  - services/api/src/payments
+  - services/api/src/webhooks
+outputs:
+  - services/api/src/payments/payment-intent.service.ts
+  - services/api/src/webhooks/stripe-webhook.ts
+  - services/api/src/payments/payment-flow.spec.ts
+commands_to_run:
+  - pnpm --filter api build
+  - pnpm --filter api lint
+tests_to_run:
+  - pnpm --filter api test -- payment-flow
+  - pnpm --filter api test -- webhook
+verification:
+  unit:
+    - pnpm --filter api test -- payment-flow
+  integration:
+    - pnpm --filter api test -- webhook
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T018 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Webhook signature verification required.
+  - Captured payment transitions booking to paid state.

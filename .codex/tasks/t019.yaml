@@ -1,0 +1,38 @@
+id: T019
+title: Mobile checkout and payment confirmation
+epic: E5-booking-payments
+objective: Build booking checkout UI and Stripe payment sheet integration.
+owner_agent: mobile-rn
+estimate_hours: 2
+depends_on:
+  - T016
+  - T018
+  - T012
+inputs:
+  - apps/mobile/src/screens/booking
+outputs:
+  - apps/mobile/src/screens/booking/CheckoutScreen.tsx
+  - apps/mobile/src/hooks/useCheckout.ts
+  - apps/mobile/src/screens/booking/__tests__/checkout.test.tsx
+commands_to_run:
+  - pnpm --filter mobile typecheck
+  - pnpm --filter mobile lint
+tests_to_run:
+  - pnpm --filter mobile test -- checkout
+  - pnpm --filter mobile test -- payment
+verification:
+  unit:
+    - pnpm --filter mobile test -- checkout
+  integration:
+    - pnpm --filter mobile test -- payment
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T019 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Guest can confirm booking and see payment result state.
+  - Failed payments show retry path without duplicate booking.

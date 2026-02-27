@@ -1,0 +1,37 @@
+id: T009
+title: Driveway listing + geospatial schema
+epic: E3-listings-geo
+objective: Create listing tables with PostGIS geometry and spatial indexes.
+owner_agent: data-geospatial
+estimate_hours: 2
+depends_on:
+  - T002
+  - T005
+inputs:
+  - packages/db/migrations
+outputs:
+  - packages/db/migrations/002_listings_geo.sql
+  - packages/db/src/schema/listings.ts
+  - docs/data-model/listings.md
+commands_to_run:
+  - pnpm --filter db migrate
+  - psql -c 'SELECT postgis_full_version();'
+tests_to_run:
+  - pnpm --filter api test -- listings-repo
+  - pnpm --filter db test || true
+verification:
+  unit:
+    - pnpm --filter api test -- listings-repo
+  integration:
+    - pnpm --filter db test || true
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T009 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Listings table stores POINT geometry SRID 4326.
+  - GiST index is used for radius queries.

@@ -1,0 +1,36 @@
+id: T014
+title: Hourly pricing engine
+epic: E4-availability-pricing
+objective: Implement pricing service for hourly totals, fees, and host payout preview.
+owner_agent: backend-api
+estimate_hours: 2
+depends_on:
+  - T013
+inputs:
+  - services/api/src/modules/pricing
+outputs:
+  - services/api/src/modules/pricing/service.ts
+  - services/api/src/modules/pricing/routes.ts
+  - services/api/src/modules/pricing/pricing.spec.ts
+commands_to_run:
+  - pnpm --filter api build
+  - pnpm --filter api lint
+tests_to_run:
+  - pnpm --filter api test -- pricing
+  - pnpm --filter api test -- fee
+verification:
+  unit:
+    - pnpm --filter api test -- pricing
+  integration:
+    - pnpm --filter api test -- fee
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T014 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Pricing response includes subtotal, platform_fee, processing_fee, total.
+  - Rounding rules are deterministic and tested.

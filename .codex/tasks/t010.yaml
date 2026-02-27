@@ -1,0 +1,37 @@
+id: T010
+title: Listing CRUD API for hosts
+epic: E3-listings-geo
+objective: Build host endpoints to create/update/publish driveway listings.
+owner_agent: backend-api
+estimate_hours: 2
+depends_on:
+  - T009
+  - T008
+inputs:
+  - services/api/src/modules/listings
+outputs:
+  - services/api/src/modules/listings/routes.ts
+  - services/api/src/modules/listings/service.ts
+  - services/api/src/modules/listings/listings.spec.ts
+commands_to_run:
+  - pnpm --filter api build
+  - pnpm --filter api lint
+tests_to_run:
+  - pnpm --filter api test -- listings
+  - pnpm --filter api test -- authorization
+verification:
+  unit:
+    - pnpm --filter api test -- listings
+  integration:
+    - pnpm --filter api test -- authorization
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T010 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Only listing owner can edit listing.
+  - Published listing contains required photos, price, and coordinates.

@@ -1,0 +1,51 @@
+version: 1
+kind: agent_schema
+description: Strict schema for autonomous agent files under .codex/agents/*.yaml
+required_fields:
+  - id
+  - mission
+  - scope
+  - owned_paths
+  - allowed_tools
+  - allowed_commands
+  - disallowed_actions
+  - coding_standards
+  - handoff_contract
+  - review_checklist
+field_definitions:
+  id:
+    type: string
+    description: Agent identifier used by task.owner_agent.
+  mission:
+    type: string
+  scope:
+    type: array[string]
+    description: Explicit responsibilities and boundaries.
+  owned_paths:
+    type: array[string]
+    description: File-system zones agent can modify without approval.
+  allowed_tools:
+    type: array[string]
+    description: Tooling classes agent may use.
+  allowed_commands:
+    type: array[string]
+    description: Shell command patterns allowed for this agent.
+  disallowed_actions:
+    type: array[string]
+    description: Actions this agent must never perform.
+  coding_standards:
+    type: array[string]
+    description: Standards the agent must enforce in code.
+  handoff_contract:
+    type: object
+    required_fields:
+      - requires
+      - provides
+    field_definitions:
+      requires:
+        type: array[string]
+      provides:
+        type: array[string]
+  review_checklist:
+    type: array[string]
+    description: Mandatory self-review items before handoff.

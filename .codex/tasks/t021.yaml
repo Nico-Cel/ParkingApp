@@ -1,0 +1,37 @@
+id: T021
+title: Mobile messaging inbox and thread
+epic: E6-messaging-reviews
+objective: Deliver inbox list and thread chat UI with realtime updates.
+owner_agent: mobile-rn
+estimate_hours: 2
+depends_on:
+  - T020
+  - T019
+inputs:
+  - apps/mobile/src/screens/messages
+outputs:
+  - apps/mobile/src/screens/messages/InboxScreen.tsx
+  - apps/mobile/src/screens/messages/ThreadScreen.tsx
+  - apps/mobile/src/screens/messages/__tests__/thread.test.tsx
+commands_to_run:
+  - pnpm --filter mobile typecheck
+  - pnpm --filter mobile lint
+tests_to_run:
+  - pnpm --filter mobile test -- messages
+  - pnpm --filter mobile test -- thread
+verification:
+  unit:
+    - pnpm --filter mobile test -- messages
+  integration:
+    - pnpm --filter mobile test -- thread
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T021 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - User can send/receive messages in booking thread.
+  - Unread badge updates when new message arrives.

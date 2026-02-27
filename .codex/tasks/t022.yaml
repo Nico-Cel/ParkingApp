@@ -1,0 +1,41 @@
+id: T022
+title: Review and rating system
+epic: E6-messaging-reviews
+objective: Add review APIs and UI for post-booking mutual ratings.
+owner_agent: backend-api
+estimate_hours: 2
+depends_on:
+  - T016
+  - T021
+inputs:
+  - services/api/src/modules/reviews
+  - apps/mobile/src/screens/reviews
+  - packages/db/migrations
+outputs:
+  - packages/db/migrations/006_reviews.sql
+  - services/api/src/modules/reviews/routes.ts
+  - services/api/src/modules/reviews/reviews.spec.ts
+  - apps/mobile/src/screens/reviews/SubmitReviewScreen.tsx
+commands_to_run:
+  - pnpm --filter db migrate
+  - pnpm --filter api build
+  - pnpm --filter mobile typecheck
+tests_to_run:
+  - pnpm --filter api test -- reviews
+  - pnpm --filter mobile test -- reviews
+verification:
+  unit:
+    - pnpm --filter api test -- reviews
+  integration:
+    - pnpm --filter mobile test -- reviews
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T022 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Only completed bookings can be reviewed once per side.
+  - Average listing rating updates after new review.

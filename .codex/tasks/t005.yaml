@@ -1,0 +1,35 @@
+id: T005
+title: User and role schema migration
+epic: E2-auth-profiles
+objective: Create users, auth_sessions, and roles schema with migrations.
+owner_agent: backend-api
+estimate_hours: 2
+depends_on:
+  - T002
+inputs:
+  - packages/db/migrations
+outputs:
+  - packages/db/migrations/001_users_roles.sql
+  - packages/db/src/schema/users.ts
+commands_to_run:
+  - pnpm --filter db migrate
+  - docker compose up -d db
+tests_to_run:
+  - pnpm --filter api test -- users-repo
+  - pnpm --filter db test || true
+verification:
+  unit:
+    - pnpm --filter api test -- users-repo
+  integration:
+    - pnpm --filter db test || true
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T005 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Migration applies and rolls back cleanly.
+  - Unique email and role constraints enforced.

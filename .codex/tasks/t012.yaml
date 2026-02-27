@@ -1,0 +1,36 @@
+id: T012
+title: Mobile map/search experience
+epic: E3-listings-geo
+objective: Implement map + list search UI with filters and result cards.
+owner_agent: mobile-rn
+estimate_hours: 2
+depends_on:
+  - T011
+inputs:
+  - apps/mobile/src/screens/search
+outputs:
+  - apps/mobile/src/screens/search/SearchMapScreen.tsx
+  - apps/mobile/src/components/search/FilterSheet.tsx
+  - apps/mobile/src/screens/search/__tests__/search-map.test.tsx
+commands_to_run:
+  - pnpm --filter mobile typecheck
+  - pnpm --filter mobile lint
+tests_to_run:
+  - pnpm --filter mobile test -- search-map
+  - pnpm --filter mobile test -- filter
+verification:
+  unit:
+    - pnpm --filter mobile test -- search-map
+  integration:
+    - pnpm --filter mobile test -- filter
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T012 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - User can change map region and refresh results.
+  - Filter state is reflected in API requests.

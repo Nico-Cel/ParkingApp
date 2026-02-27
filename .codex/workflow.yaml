@@ -1,0 +1,97 @@
+version: 1
+name: driveway-hourly-parking-autonomy-workflow
+objective: Coordinate multi-agent delivery of the Driveway Hourly Parking marketplace MVP.
+agent_selection_policy:
+  strategy: dependency_first_with_specialist_routing
+  rules:
+    - Pick only tasks with all depends_on tasks completed.
+    - Route by owner_agent exact match.
+    - Keep at most 2 in-progress tasks per agent.
+    - Prioritize tasks on critical path to Gate 3 and Gate 4.
+state_machine:
+  statuses:
+    - todo
+    - in_progress
+    - in_review
+    - blocked
+    - done
+  transitions:
+    - from: todo
+      to: in_progress
+      condition: owner_agent_capacity_available
+    - from: in_progress
+      to: in_review
+      condition: commands_to_run and tests_to_run executed and artifacts attached
+    - from: in_review
+      to: done
+      condition: verification checklist and done_when satisfied
+    - from: in_review
+      to: blocked
+      condition: verification failed
+    - from: blocked
+      to: in_progress
+      condition: blocker resolved
+handoff_protocol:
+  required_handoff_artifacts:
+    - task_id
+    - summary_of_changes
+    - changed_files
+    - command_results
+    - test_results
+    - known_risks
+  review_owner: qa-verification
+  max_review_sla_hours: 4
+verification_gates:
+  gate_1_repo_boots_locally:
+    description: Local stack starts and app builds.
+    required_commands:
+      - docker compose up -d --build
+      - pnpm -r build
+      - docker compose ps
+  gate_2_ci_green:
+    description: Lint, typecheck, and unit tests pass in CI-equivalent mode.
+    required_commands:
+      - pnpm lint
+      - pnpm typecheck
+      - pnpm test
+  gate_3_integration_booking_payments:
+    description: Integration suite validates booking + payment orchestration.
+    required_commands:
+      - pnpm test:integration --filter booking
+      - pnpm test:integration --filter payments
+  gate_4_e2e_smoke:
+    description: End-to-end smoke path login → search → book → pay → message → review.
+    required_commands:
+      - pnpm test:e2e -- --grep "smoke"
+stop_conditions:
+  - condition: task_verification_failed_twice
+    action: create_diagnostic_task_and_reassign
+    details:
+      diagnostic_task_template:
+        id_pattern: D-[original_task_id]-[sequence]
+        owner_agent: qa-verification
+        required_fields:
+          - failing_signals
+          - reproduction_steps
+          - suspected_root_cause
+          - proposed_fix_owner_agent
+      reassignment_policy:
+        - if failure_domain == payment: payments-compliance
+        - if failure_domain == geospatial: data-geospatial
+        - else: platform-architect
+  - condition: gate_failure_on_mainline
+    action: freeze_new_feature_tasks_until_gate_green
+escalation:
+  levels:
+    - level: 1
+      trigger: single task blocked > 4 hours
+      owner: owner_agent
+      action: request pair review from platform-architect
+    - level: 2
+      trigger: critical path blocked > 8 hours
+      owner: platform-architect
+      action: split task and assign parallel unblockers
+    - level: 3
+      trigger: gate failure persists > 24 hours
+      owner: devops-release
+      action: invoke incident runbook and hotfix branch

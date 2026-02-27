@@ -1,0 +1,38 @@
+id: T020
+title: Messaging backend with realtime channels
+epic: E6-messaging-reviews
+objective: Implement conversation and message APIs with websocket events.
+owner_agent: backend-api
+estimate_hours: 2
+depends_on:
+  - T016
+inputs:
+  - services/api/src/modules/messaging
+  - packages/db/migrations
+outputs:
+  - packages/db/migrations/005_messaging.sql
+  - services/api/src/modules/messaging/routes.ts
+  - services/api/src/modules/messaging/socket.ts
+  - services/api/src/modules/messaging/messaging.spec.ts
+commands_to_run:
+  - pnpm --filter db migrate
+  - pnpm --filter api build
+tests_to_run:
+  - pnpm --filter api test -- messaging
+  - pnpm --filter api test -- websocket
+verification:
+  unit:
+    - pnpm --filter api test -- messaging
+  integration:
+    - pnpm --filter api test -- websocket
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T020 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Only booking participants can access conversation.
+  - New messages emit realtime event to subscribed clients.

@@ -1,0 +1,37 @@
+id: T003
+title: Centralized environment configuration
+epic: E1-foundation
+objective: Implement typed environment loader for API/mobile and documented env vars.
+owner_agent: platform-architect
+estimate_hours: 2
+depends_on:
+  - T001
+  - T002
+inputs:
+  - infra/env/.env.example
+outputs:
+  - services/api/src/config/env.ts
+  - apps/mobile/src/config/env.ts
+  - docs/runbooks/env-vars.md
+commands_to_run:
+  - pnpm --filter api build
+  - pnpm --filter mobile typecheck
+tests_to_run:
+  - pnpm --filter api test -- env
+  - pnpm --filter mobile test -- env
+verification:
+  unit:
+    - pnpm --filter api test -- env
+  integration:
+    - pnpm --filter mobile test -- env
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T003 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Missing env vars fail fast at startup.
+  - Env var documentation maps to runtime loader.
