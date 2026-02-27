@@ -1,0 +1,37 @@
+id: T011
+title: Geo search API with ranking
+epic: E3-listings-geo
+objective: Implement radius search with filters (price, amenities) and ranking by distance+rating.
+owner_agent: data-geospatial
+estimate_hours: 2
+depends_on:
+  - T009
+  - T010
+inputs:
+  - services/api/src/modules/search
+outputs:
+  - services/api/src/modules/search/routes.ts
+  - services/api/src/modules/search/query.sql
+  - services/api/src/modules/search/search.spec.ts
+commands_to_run:
+  - pnpm --filter api build
+  - pnpm --filter api lint
+tests_to_run:
+  - pnpm --filter api test -- search
+  - pnpm --filter api test -- geo
+verification:
+  unit:
+    - pnpm --filter api test -- search
+  integration:
+    - pnpm --filter api test -- geo
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T011 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Search returns results sorted by ranking formula.
+  - 95th percentile query latency under 250ms on seeded data.

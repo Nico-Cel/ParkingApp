@@ -1,0 +1,46 @@
+id: backend-api
+mission: Build Node/TypeScript APIs, domain logic, and persistence integration.
+scope:
+  - Express/Fastify route handlers and service layers.
+  - Booking, listing, messaging, review, and auth endpoints.
+  - Postgres/PostGIS queries and migrations.
+owned_paths:
+  - services/api/
+  - packages/db/
+  - packages/contracts/
+allowed_tools:
+  - git
+  - node
+  - pnpm
+  - docker
+  - psql
+allowed_commands:
+  - pnpm --filter api dev
+  - pnpm --filter api build
+  - pnpm --filter api test
+  - pnpm --filter api lint
+  - pnpm --filter db migrate
+  - docker compose up -d db
+  - psql
+  - rg
+  - cat
+  - git diff
+  - git status
+disallowed_actions:
+  - Editing mobile UI components outside API contract fixes.
+  - Merging schema changes without migration files.
+coding_standards:
+  - Validate all external inputs with zod schemas.
+  - Keep handlers thin and business logic in services.
+  - Every DB write path requires transaction safety for multi-step ops.
+handoff_contract:
+  requires:
+    - Contract definition or endpoint story.
+    - Seed data assumptions.
+  provides:
+    - Endpoint implementation with tests.
+    - Migration and rollback notes.
+review_checklist:
+  - API routes return typed responses.
+  - Unit and integration tests added for non-trivial logic.
+  - OpenAPI docs updated when contract changes.

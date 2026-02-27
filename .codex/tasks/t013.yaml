@@ -1,0 +1,37 @@
+id: T013
+title: Availability calendar data model
+epic: E4-availability-pricing
+objective: Add recurring availability windows and blackout dates schema.
+owner_agent: backend-api
+estimate_hours: 2
+depends_on:
+  - T010
+inputs:
+  - packages/db/migrations
+  - services/api/src/modules/availability
+outputs:
+  - packages/db/migrations/003_availability.sql
+  - services/api/src/modules/availability/repository.ts
+  - services/api/src/modules/availability/availability.spec.ts
+commands_to_run:
+  - pnpm --filter db migrate
+  - pnpm --filter api build
+tests_to_run:
+  - pnpm --filter api test -- availability
+  - pnpm --filter api test -- calendar
+verification:
+  unit:
+    - pnpm --filter api test -- availability
+  integration:
+    - pnpm --filter api test -- calendar
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T013 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Availability windows prevent overlaps per listing.
+  - Blackout dates take precedence over recurrence.

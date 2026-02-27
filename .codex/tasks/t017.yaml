@@ -1,0 +1,37 @@
+id: T017
+title: Stripe Connect onboarding API
+epic: E5-booking-payments
+objective: Implement host onboarding links and account status sync endpoints.
+owner_agent: payments-compliance
+estimate_hours: 2
+depends_on:
+  - T006
+  - T008
+inputs:
+  - services/api/src/payments
+outputs:
+  - services/api/src/payments/connect.service.ts
+  - services/api/src/payments/connect.routes.ts
+  - services/api/src/payments/connect.spec.ts
+commands_to_run:
+  - pnpm --filter api build
+  - pnpm --filter api lint
+tests_to_run:
+  - pnpm --filter api test -- connect
+  - stripe trigger account.updated || true
+verification:
+  unit:
+    - pnpm --filter api test -- connect
+  integration:
+    - stripe trigger account.updated || true
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T017 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Hosts receive onboarding URL and status is persisted.
+  - Only authenticated hosts can initiate onboarding.

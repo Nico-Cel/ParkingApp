@@ -1,0 +1,37 @@
+id: T015
+title: Host availability editor UI
+epic: E4-availability-pricing
+objective: Create mobile host calendar editor for recurring slots and exceptions.
+owner_agent: mobile-rn
+estimate_hours: 2
+depends_on:
+  - T013
+  - T014
+inputs:
+  - apps/mobile/src/screens/host
+outputs:
+  - apps/mobile/src/screens/host/AvailabilityEditorScreen.tsx
+  - apps/mobile/src/components/host/TimeWindowEditor.tsx
+  - apps/mobile/src/screens/host/__tests__/availability-editor.test.tsx
+commands_to_run:
+  - pnpm --filter mobile typecheck
+  - pnpm --filter mobile lint
+tests_to_run:
+  - pnpm --filter mobile test -- availability-editor
+  - pnpm --filter mobile test -- host
+verification:
+  unit:
+    - pnpm --filter mobile test -- availability-editor
+  integration:
+    - pnpm --filter mobile test -- host
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T015 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Host can add, edit, and remove availability windows.
+  - Invalid overlapping windows are blocked in UI.

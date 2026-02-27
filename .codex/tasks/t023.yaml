@@ -1,0 +1,38 @@
+id: T023
+title: Seed data and fixture pipeline
+epic: E7-quality-release
+objective: Create realistic local seed data for users, listings, bookings, payments.
+owner_agent: data-geospatial
+estimate_hours: 2
+depends_on:
+  - T022
+inputs:
+  - packages/db/seeds
+  - tests/fixtures
+outputs:
+  - packages/db/seeds/seed.ts
+  - tests/fixtures/listings.json
+  - tests/fixtures/bookings.json
+  - docs/runbooks/seeding.md
+commands_to_run:
+  - pnpm --filter db seed
+  - docker compose up -d db
+tests_to_run:
+  - pnpm --filter api test --fixtures
+  - pnpm --filter db test || true
+verification:
+  unit:
+    - pnpm --filter api test --fixtures
+  integration:
+    - pnpm --filter db test || true
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T023 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Seed command produces deterministic dataset.
+  - Fixture data supports search, booking, and payment tests.

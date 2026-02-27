@@ -1,0 +1,37 @@
+id: T007
+title: Mobile auth flow screens
+epic: E2-auth-profiles
+objective: Build RN login/register/forgot-password screens and API integration.
+owner_agent: mobile-rn
+estimate_hours: 2
+depends_on:
+  - T006
+inputs:
+  - apps/mobile/src/navigation
+outputs:
+  - apps/mobile/src/screens/auth/LoginScreen.tsx
+  - apps/mobile/src/screens/auth/RegisterScreen.tsx
+  - apps/mobile/src/hooks/useAuth.ts
+  - apps/mobile/src/screens/auth/__tests__/auth-flow.test.tsx
+commands_to_run:
+  - pnpm --filter mobile typecheck
+  - pnpm --filter mobile lint
+tests_to_run:
+  - pnpm --filter mobile test -- auth-flow
+  - pnpm --filter mobile test -- useAuth
+verification:
+  unit:
+    - pnpm --filter mobile test -- auth-flow
+  integration:
+    - pnpm --filter mobile test -- useAuth
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T007 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - User can sign in and token is persisted securely.
+  - Auth screens handle loading and error states.

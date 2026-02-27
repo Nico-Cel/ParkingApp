@@ -1,0 +1,38 @@
+id: T001
+title: Workspace scaffold for monorepo
+epic: E1-foundation
+objective: Create React Native + Node/TS + shared packages monorepo scaffold.
+owner_agent: platform-architect
+estimate_hours: 2
+depends_on: []
+inputs:
+  - README.md
+outputs:
+  - package.json
+  - pnpm-workspace.yaml
+  - tsconfig.base.json
+  - apps/mobile/package.json
+  - services/api/package.json
+  - packages/contracts/package.json
+commands_to_run:
+  - pnpm install
+  - pnpm -r build
+tests_to_run:
+  - pnpm -r build
+  - pnpm lint || true
+verification:
+  unit:
+    - pnpm -r build
+  integration:
+    - pnpm lint || true
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T001 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Build succeeds for all workspace packages.
+  - Repository has apps/mobile, services/api, packages/contracts directories.

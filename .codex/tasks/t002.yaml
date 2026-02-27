@@ -1,0 +1,37 @@
+id: T002
+title: Docker compose baseline with Postgres/PostGIS
+epic: E1-foundation
+objective: Add local infrastructure stack for API, DB, and supporting services.
+owner_agent: devops-release
+estimate_hours: 2
+depends_on:
+  - T001
+inputs:
+  - docker-compose.yml
+outputs:
+  - docker-compose.yml
+  - infra/docker/api.Dockerfile
+  - infra/docker/mobile.Dockerfile
+  - infra/env/.env.example
+commands_to_run:
+  - docker compose config
+  - docker compose up -d db
+tests_to_run:
+  - docker compose ps
+  - docker compose logs db --tail=50
+verification:
+  unit:
+    - docker compose ps
+  integration:
+    - docker compose logs db --tail=50
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T002 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Database container is healthy.
+  - Compose config validates without warnings.

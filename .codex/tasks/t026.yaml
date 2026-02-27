@@ -1,0 +1,41 @@
+id: T026
+title: Release readiness, observability, and gate report
+epic: E7-quality-release
+objective: Finalize runbooks, dashboards, and objective gate evidence for MVP release.
+owner_agent: devops-release
+estimate_hours: 2
+depends_on:
+  - T004
+  - T024
+  - T025
+inputs:
+  - docs/runbooks
+  - infra/monitoring
+outputs:
+  - docs/runbooks/release-checklist.md
+  - docs/runbooks/incident-response.md
+  - infra/monitoring/grafana-dashboard.json
+  - docs/qa/gate-report.md
+commands_to_run:
+  - pnpm lint
+  - pnpm typecheck
+  - pnpm test
+tests_to_run:
+  - pnpm test:integration --filter booking
+  - pnpm test:e2e -- --grep smoke
+verification:
+  unit:
+    - pnpm test:integration --filter booking
+  integration:
+    - pnpm test:e2e -- --grep smoke
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T026 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Gate 1-4 status recorded with command outputs.
+  - Release checklist includes rollback and on-call ownership.

@@ -1,0 +1,44 @@
+id: payments-compliance
+mission: Own Stripe Connect integration, payment safety, and finance-related correctness.
+scope:
+  - Stripe Connect onboarding and account status sync.
+  - Payment intents, capture/refund webhooks, ledger events.
+  - PCI-conscious handling of tokens and secrets.
+owned_paths:
+  - services/api/src/payments/
+  - services/api/src/webhooks/
+  - docs/payments/
+allowed_tools:
+  - git
+  - node
+  - pnpm
+  - stripe-cli
+  - docker
+allowed_commands:
+  - pnpm --filter api test payments
+  - pnpm --filter api lint
+  - stripe listen
+  - stripe trigger
+  - docker compose up -d api db
+  - rg
+  - cat
+  - git diff
+  - git status
+disallowed_actions:
+  - Storing full card data in application database.
+  - Logging secrets or PII in plaintext.
+coding_standards:
+  - Use idempotency keys for all payment-creating requests.
+  - Verify webhook signatures before processing.
+  - Persist audit trail for each payment state transition.
+handoff_contract:
+  requires:
+    - Booking lifecycle contract.
+    - Stripe account and env variable map.
+  provides:
+    - Payment API + webhook implementation.
+    - Reconciliation and failure handling tests.
+review_checklist:
+  - Happy path and failure path tested.
+  - Replay-safe webhook handling verified.
+  - Finance events traceable from booking id.

@@ -1,0 +1,43 @@
+id: data-geospatial
+mission: Design spatial data model and high-performance geo queries.
+scope:
+  - PostGIS schema, indexes, and migration safety.
+  - Distance/radius queries and map tile support.
+  - Data quality constraints for coordinates and pricing attributes.
+owned_paths:
+  - packages/db/migrations/
+  - services/api/src/modules/search/
+  - docs/data-model/
+allowed_tools:
+  - git
+  - psql
+  - node
+  - pnpm
+  - docker
+allowed_commands:
+  - pnpm --filter db migrate
+  - pnpm --filter api test search
+  - psql
+  - docker compose up -d db
+  - explain analyze
+  - rg
+  - cat
+  - git diff
+  - git status
+disallowed_actions:
+  - Introducing migrations without rollback strategy.
+  - Full table scans in production search paths.
+coding_standards:
+  - All geo columns use SRID 4326.
+  - Add GiST indexes for spatial predicates.
+  - Benchmark new queries with EXPLAIN ANALYZE.
+handoff_contract:
+  requires:
+    - Search UX constraints and ranking needs.
+  provides:
+    - Migration scripts and query functions.
+    - Performance notes and thresholds.
+review_checklist:
+  - Spatial indexes present and used.
+  - Coordinate validation added at ingestion.
+  - Query latency target documented.

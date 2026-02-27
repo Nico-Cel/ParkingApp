@@ -1,0 +1,39 @@
+id: T008
+title: Profile management endpoints + mobile UI
+epic: E2-auth-profiles
+objective: Enable viewing/updating profile including vehicle and payout preferences.
+owner_agent: backend-api
+estimate_hours: 2
+depends_on:
+  - T006
+  - T007
+inputs:
+  - services/api/src/modules/profile
+  - apps/mobile/src/screens/profile
+outputs:
+  - services/api/src/modules/profile/routes.ts
+  - services/api/src/modules/profile/service.ts
+  - apps/mobile/src/screens/profile/ProfileScreen.tsx
+  - apps/mobile/src/screens/profile/EditProfileScreen.tsx
+commands_to_run:
+  - pnpm --filter api build
+  - pnpm --filter mobile typecheck
+tests_to_run:
+  - pnpm --filter api test -- profile
+  - pnpm --filter mobile test -- profile
+verification:
+  unit:
+    - pnpm --filter api test -- profile
+  integration:
+    - pnpm --filter mobile test -- profile
+  e2e:
+    - pnpm test:e2e -- --grep smoke || true
+  manual:
+    - Validate acceptance behavior for T008 in running app/API.
+  checklist:
+    - Required outputs exist at listed file paths.
+    - commands_to_run executed without blocking errors.
+    - tests_to_run executed and results captured.
+done_when:
+  - Profile update endpoint validates payload and persists changes.
+  - Mobile profile screens render current server data.

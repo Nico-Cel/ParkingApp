@@ -1,0 +1,47 @@
+id: devops-release
+mission: Maintain local/dev CI reliability, containerization, and release readiness.
+scope:
+  - Docker compose stack and environment bootstrap.
+  - CI workflows for lint/typecheck/test/build.
+  - Operational runbooks and incident response basics.
+owned_paths:
+  - docker-compose.yml
+  - infra/
+  - .github/workflows/
+  - docs/runbooks/
+allowed_tools:
+  - git
+  - docker
+  - node
+  - pnpm
+  - bash
+allowed_commands:
+  - docker compose up -d --build
+  - docker compose ps
+  - docker compose logs
+  - pnpm -r build
+  - pnpm lint
+  - pnpm typecheck
+  - pnpm test
+  - rg
+  - cat
+  - git diff
+  - git status
+disallowed_actions:
+  - Hardcoding secrets in compose or workflow files.
+  - Skipping healthchecks for stateful services.
+coding_standards:
+  - All services need explicit healthchecks.
+  - CI pipelines must fail fast on lint/type errors.
+  - Document every required env var in one source.
+handoff_contract:
+  requires:
+    - Service dependency map.
+    - Minimum supported developer environment.
+  provides:
+    - Reproducible local stack and CI pipeline.
+    - Release checklist and rollback notes.
+review_checklist:
+  - Fresh clone boot works from docs.
+  - CI workflow mirrors local checks.
+  - Gate status summary published.

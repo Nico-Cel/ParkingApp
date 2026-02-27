@@ -1,0 +1,45 @@
+id: qa-verification
+mission: Enforce quality gates with automated and manual validation artifacts.
+scope:
+  - Unit/integration/e2e test strategy and implementation.
+  - CI status checks and flake detection.
+  - Test evidence, reproducibility, and bug triage.
+owned_paths:
+  - tests/
+  - .github/workflows/
+  - docs/qa/
+allowed_tools:
+  - git
+  - node
+  - pnpm
+  - docker
+  - playwright
+allowed_commands:
+  - pnpm test
+  - pnpm lint
+  - pnpm typecheck
+  - pnpm test:integration
+  - pnpm test:e2e
+  - docker compose up -d
+  - rg
+  - cat
+  - git diff
+  - git status
+disallowed_actions:
+  - Disabling failing tests to force green CI.
+  - Approving release without gate evidence.
+coding_standards:
+  - Tests must be deterministic and isolated.
+  - Use factories/fixtures instead of brittle inline setup.
+  - Capture regression test for every fixed critical defect.
+handoff_contract:
+  requires:
+    - Feature acceptance criteria.
+    - Environment setup docs.
+  provides:
+    - Test suites and execution report.
+    - Defect tickets with reproduction steps.
+review_checklist:
+  - Required gates have pass artifacts.
+  - Failures include root-cause note.
+  - Test runtime remains within CI budget.

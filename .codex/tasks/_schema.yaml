@@ -1,0 +1,85 @@
+version: 1
+kind: task_schema
+description: Strict schema for autonomous task files under .codex/tasks/*.yaml
+required_fields:
+  - id
+  - title
+  - epic
+  - objective
+  - owner_agent
+  - estimate_hours
+  - depends_on
+  - inputs
+  - outputs
+  - commands_to_run
+  - tests_to_run
+  - verification
+  - done_when
+field_definitions:
+  id:
+    type: string
+    pattern: '^T[0-9]{3}$'
+    description: Unique task identifier.
+  title:
+    type: string
+    description: Human-readable task name.
+  epic:
+    type: string
+    allowed_values:
+      - E1-foundation
+      - E2-auth-profiles
+      - E3-listings-geo
+      - E4-availability-pricing
+      - E5-booking-payments
+      - E6-messaging-reviews
+      - E7-quality-release
+  objective:
+    type: string
+    description: Concrete outcome for the task.
+  owner_agent:
+    type: string
+    description: Must match one file in .codex/agents.
+  estimate_hours:
+    type: number
+    min: 1
+    max: 4
+  depends_on:
+    type: array[string]
+    description: List of predecessor task IDs. Use [] if none.
+  inputs:
+    type: array[string]
+    description: Existing files/docs/services consumed.
+  outputs:
+    type: array[string]
+    description: File paths created or modified by this task.
+  commands_to_run:
+    type: array[string]
+    min_items: 1
+    description: Build/run commands used during implementation.
+  tests_to_run:
+    type: array[string]
+    min_items: 1
+    description: Verification commands tied to this task.
+  verification:
+    type: object
+    required_fields:
+      - unit
+      - integration
+      - e2e
+      - manual
+      - checklist
+    field_definitions:
+      unit:
+        type: array[string]
+      integration:
+        type: array[string]
+      e2e:
+        type: array[string]
+      manual:
+        type: array[string]
+      checklist:
+        type: array[string]
+  done_when:
+    type: array[string]
+    min_items: 1
+    description: Objective completion conditions.
